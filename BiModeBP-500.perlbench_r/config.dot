@@ -42,7 +42,7 @@ fontsize=14;
 label="cpu \n: AtomicSimpleCPU";
 shape=Mrecord;
 style="rounded, filled";
-tooltip="branchPred&#61;Null&#10;\checker&#61;Null&#10;\clk_domain&#61;system.cpu_clk_domain&#10;\cpu_id&#61;0&#10;\do_checkpoint_insts&#61;true&#10;\do_statistics_insts&#61;true&#10;\dtb&#61;system.cpu.dtb&#10;\eventq_index&#61;0&#10;\function_trace&#61;false&#10;\function_trace_start&#61;0&#10;\interrupts&#61;system.cpu.interrupts&#10;\isa&#61;system.cpu.isa&#10;\itb&#61;system.cpu.itb&#10;\max_insts_all_threads&#61;0&#10;\max_insts_any_thread&#61;1000000&#10;\numThreads&#61;1&#10;\power_gating_on_idle&#61;false&#10;\power_model&#61;&#10;\power_state&#61;system.cpu.power_state&#10;\progress_interval&#61;0&#10;\pwr_gating_latency&#61;300&#10;\simpoint_start_insts&#61;&#10;\simulate_data_stalls&#61;false&#10;\simulate_inst_stalls&#61;false&#10;\socket_id&#61;0&#10;\switched_out&#61;false&#10;\syscallRetryLatency&#61;10000&#10;\system&#61;system&#10;\tracer&#61;system.cpu.tracer&#10;\wait_for_remote_gdb&#61;false&#10;\width&#61;1&#10;\workload&#61;system.cpu.workload";
+tooltip="branchPred&#61;system.cpu.branchPred&#10;\checker&#61;Null&#10;\clk_domain&#61;system.cpu_clk_domain&#10;\cpu_id&#61;0&#10;\do_checkpoint_insts&#61;true&#10;\do_statistics_insts&#61;true&#10;\dtb&#61;system.cpu.dtb&#10;\eventq_index&#61;0&#10;\function_trace&#61;false&#10;\function_trace_start&#61;0&#10;\interrupts&#61;system.cpu.interrupts&#10;\isa&#61;system.cpu.isa&#10;\itb&#61;system.cpu.itb&#10;\max_insts_all_threads&#61;0&#10;\max_insts_any_thread&#61;1000000&#10;\numThreads&#61;1&#10;\power_gating_on_idle&#61;false&#10;\power_model&#61;&#10;\power_state&#61;system.cpu.power_state&#10;\progress_interval&#61;0&#10;\pwr_gating_latency&#61;300&#10;\simpoint_start_insts&#61;&#10;\simulate_data_stalls&#61;false&#10;\simulate_inst_stalls&#61;false&#10;\socket_id&#61;0&#10;\switched_out&#61;false&#10;\syscallRetryLatency&#61;10000&#10;\system&#61;system&#10;\tracer&#61;system.cpu.tracer&#10;\wait_for_remote_gdb&#61;false&#10;\width&#61;1&#10;\workload&#61;system.cpu.workload";
 system_cpu_icache_port [color="#000000", fillcolor="#959ead", fontcolor="#000000", fontname=Arial, fontsize=14, label=icache_port, shape=Mrecord, style="rounded, filled"];
 system_cpu_dcache_port [color="#000000", fillcolor="#959ead", fontcolor="#000000", fontname=Arial, fontsize=14, label=dcache_port, shape=Mrecord, style="rounded, filled"];
 subgraph cluster_system_cpu_dtb {
@@ -153,6 +153,30 @@ label="workload \n: Process";
 shape=Mrecord;
 style="rounded, filled";
 tooltip="cmd&#61;perlbench_r_base.perceptron-m64 -I. -I./lib test.pl&#10;\cwd&#61;/root/spec2017/benchspec/CPU/500.perlbench_r/run/run_base_test_perceptron-m64.0000&#10;\drivers&#61;&#10;\egid&#61;100&#10;\env&#61;&#10;\errout&#61;cerr&#10;\euid&#61;100&#10;\eventq_index&#61;0&#10;\executable&#61;perlbench_r_base.perceptron-m64&#10;\gid&#61;100&#10;\input&#61;cin&#10;\kvmInSE&#61;false&#10;\maxStackSize&#61;67108864&#10;\output&#61;cout&#10;\pgid&#61;100&#10;\pid&#61;100&#10;\ppid&#61;0&#10;\release&#61;5.1.0&#10;\simpoint&#61;0&#10;\system&#61;system&#10;\uid&#61;100&#10;\useArchPT&#61;false";
+}
+
+subgraph cluster_system_cpu_branchPred {
+color="#000000";
+fillcolor="#bab6ae";
+fontcolor="#000000";
+fontname=Arial;
+fontsize=14;
+label="branchPred \n: BiModeBP";
+shape=Mrecord;
+style="rounded, filled";
+tooltip="BTBEntries&#61;4096&#10;\BTBTagSize&#61;16&#10;\RASSize&#61;16&#10;\choiceCtrBits&#61;2&#10;\choicePredictorSize&#61;8192&#10;\eventq_index&#61;0&#10;\globalCtrBits&#61;2&#10;\globalPredictorSize&#61;8192&#10;\indirectBranchPred&#61;system.cpu.branchPred.indirectBranchPred&#10;\instShiftAmt&#61;2&#10;\numThreads&#61;1";
+subgraph cluster_system_cpu_branchPred_indirectBranchPred {
+color="#000000";
+fillcolor="#9f9c95";
+fontcolor="#000000";
+fontname=Arial;
+fontsize=14;
+label="indirectBranchPred \n: SimpleIndirectPredictor";
+shape=Mrecord;
+style="rounded, filled";
+tooltip="eventq_index&#61;0&#10;\indirectGHRBits&#61;13&#10;\indirectHashGHR&#61;true&#10;\indirectHashTargets&#61;true&#10;\indirectPathLength&#61;3&#10;\indirectSets&#61;256&#10;\indirectTagSize&#61;16&#10;\indirectWays&#61;2&#10;\instShiftAmt&#61;2&#10;\numThreads&#61;1";
+}
+
 }
 
 subgraph cluster_system_cpu_isa {
@@ -1481,30 +1505,6 @@ tooltip="eventq_index&#61;0&#10;\opClass&#61;IprAccess&#10;\opLat&#61;3&#10;\pip
 
 }
 
-subgraph cluster_system_switch_cpus_branchPred {
-color="#000000";
-fillcolor="#bab6ae";
-fontcolor="#000000";
-fontname=Arial;
-fontsize=14;
-label="branchPred \n: TournamentBP";
-shape=Mrecord;
-style="rounded, filled";
-tooltip="BTBEntries&#61;4096&#10;\BTBTagSize&#61;16&#10;\RASSize&#61;16&#10;\choiceCtrBits&#61;2&#10;\choicePredictorSize&#61;8192&#10;\eventq_index&#61;0&#10;\globalCtrBits&#61;2&#10;\globalPredictorSize&#61;8192&#10;\indirectBranchPred&#61;system.switch_cpus.branchPred.indirectBranchPred&#10;\instShiftAmt&#61;2&#10;\localCtrBits&#61;2&#10;\localHistoryTableSize&#61;2048&#10;\localPredictorSize&#61;2048&#10;\numThreads&#61;1";
-subgraph cluster_system_switch_cpus_branchPred_indirectBranchPred {
-color="#000000";
-fillcolor="#9f9c95";
-fontcolor="#000000";
-fontname=Arial;
-fontsize=14;
-label="indirectBranchPred \n: SimpleIndirectPredictor";
-shape=Mrecord;
-style="rounded, filled";
-tooltip="eventq_index&#61;0&#10;\indirectGHRBits&#61;13&#10;\indirectHashGHR&#61;true&#10;\indirectHashTargets&#61;true&#10;\indirectPathLength&#61;3&#10;\indirectSets&#61;256&#10;\indirectTagSize&#61;16&#10;\indirectWays&#61;2&#10;\instShiftAmt&#61;2&#10;\numThreads&#61;1";
-}
-
-}
-
 subgraph cluster_system_switch_cpus_dtb {
 color="#000000";
 fillcolor="#bab6ae";
@@ -1599,6 +1599,30 @@ label="power_state \n: PowerState";
 shape=Mrecord;
 style="rounded, filled";
 tooltip="clk_gate_bins&#61;20&#10;\clk_gate_max&#61;1000000000000&#10;\clk_gate_min&#61;1000&#10;\default_state&#61;UNDEFINED&#10;\eventq_index&#61;0&#10;\leaders&#61;&#10;\possible_states&#61;ON CLK_GATED OFF";
+}
+
+subgraph cluster_system_switch_cpus_branchPred {
+color="#000000";
+fillcolor="#bab6ae";
+fontcolor="#000000";
+fontname=Arial;
+fontsize=14;
+label="branchPred \n: BiModeBP";
+shape=Mrecord;
+style="rounded, filled";
+tooltip="BTBEntries&#61;4096&#10;\BTBTagSize&#61;16&#10;\RASSize&#61;16&#10;\choiceCtrBits&#61;2&#10;\choicePredictorSize&#61;8192&#10;\eventq_index&#61;0&#10;\globalCtrBits&#61;2&#10;\globalPredictorSize&#61;8192&#10;\indirectBranchPred&#61;system.switch_cpus.branchPred.indirectBranchPred&#10;\instShiftAmt&#61;2&#10;\numThreads&#61;1";
+subgraph cluster_system_switch_cpus_branchPred_indirectBranchPred {
+color="#000000";
+fillcolor="#9f9c95";
+fontcolor="#000000";
+fontname=Arial;
+fontsize=14;
+label="indirectBranchPred \n: SimpleIndirectPredictor";
+shape=Mrecord;
+style="rounded, filled";
+tooltip="eventq_index&#61;0&#10;\indirectGHRBits&#61;13&#10;\indirectHashGHR&#61;true&#10;\indirectHashTargets&#61;true&#10;\indirectPathLength&#61;3&#10;\indirectSets&#61;256&#10;\indirectTagSize&#61;16&#10;\indirectWays&#61;2&#10;\instShiftAmt&#61;2&#10;\numThreads&#61;1";
+}
+
 }
 
 }
