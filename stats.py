@@ -1,4 +1,4 @@
-import csv, os
+import csv, sys, os
 
 class test:
     def __init__(self, test_name, config):
@@ -38,7 +38,7 @@ for d in os.walk('.'):
 
     tests.append(t)
 
-tests.sort(key=lambda x: x.test_name + x.config, reverse=False)
+tests.sort(key=lambda x: x.config + x.test_name, reverse=False)
 with open('stats.csv', mode='w') as csv_file:
     fieldnames = ['predictor', 'benchmark'] + want_vals
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
